@@ -5,7 +5,7 @@ on:
     branches:
       - master
   workflow_dispatch:
-  # This will also trigger the workflow when files are changed
+  # Watch for any file changes
   watch:
     types: [started]
 
@@ -27,12 +27,14 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           
-      - name: Check for changes and push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          
+      - name: Install chokidar for file watching
+        run: npm install -g chokidar-cli
+          
+      - name: Watch and push changes
         run: |
-          if [[ `git status --porcelain` ]]; then
-            git add .
-            git commit -m "Auto-push: Updated files"
-            git push
-          fi 
+          chokidar "**/*" -c "git add . && git commit -m 'Auto-commit: File changes detected' && git push" --ignore-initial 

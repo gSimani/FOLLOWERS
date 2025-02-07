@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "git add . && git commit -m \"Deploy update\" && git push && vercel deploy --prod"
+    "deploy": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File deploy.ps1"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

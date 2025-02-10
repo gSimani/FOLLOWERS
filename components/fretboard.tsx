@@ -1,5 +1,6 @@
 "use client"
 
+import React from 'react'
 import type { FretboardNote } from "@/types"
 
 const STANDARD_TUNING = ["E", "B", "G", "D", "A", "E"]

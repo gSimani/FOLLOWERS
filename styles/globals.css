@@ -92,3 +92,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.fret-marker::before {
+  content: "•";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+}
+
+[data-fret="12"]::before {
+  content: "••";
+}

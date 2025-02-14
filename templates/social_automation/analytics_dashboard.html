@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - Social Media Automation{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+        <h2 class="text-lg leading-6 font-medium text-gray-900">Analytics Overview</h2>
+        
+        {% if analytics %}
+        <div class="mt-5">
+            {% regroup analytics by platform as platform_list %}
+            {% for platform in platform_list %}
+            <div class="mb-8">
+                <div class="flex items-center mb-4">
+                    <i class="{{ platform.grouper.icon }} text-2xl text-gray-500 mr-2"></i>
+                    <h3 class="text-lg font-medium text-gray-900">{{ platform.grouper.name }}</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {% for entry in platform.list %}
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name={{ entry.social_profile.username }}" alt="{{ entry.social_profile.username }}">
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-lg font-medium text-gray-900">{{ entry.social_profile.username }}</h4>
+                                    <p class="text-sm text-gray-500">{{ entry.date|date:"M j, Y" }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 grid grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Followers</dt>
+                                    <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ entry.followers_count }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Following</dt>
+                                    <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ entry.following_count }}</dd>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5">
+                                <dt class="text-sm font-medium text-gray-500 truncate">Engagement Rate</dt>
+                                <dd class="mt-1">
+                                    <div class="relative pt-1">
+                                        <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                                            <div style="width: {{ entry.engagement_rate }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-semibold inline-block text-indigo-600">
+                                                {{ entry.engagement_rate|floatformat:2 }}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-chart-line text-4xl text-gray-400 mb-4"></i>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No analytics data available</h3>
+            <p class="mt-1 text-sm text-gray-500">Analytics data will be collected as you use the platform.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

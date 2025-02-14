@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Platform Icon -->
+        <div class="flex justify-center mb-8">
+            <div class="w-24 h-24 {{ platform_icon_class }} rounded-full flex items-center justify-center">
+                <i class="{{ platform_icon }} text-5xl text-white"></i>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-2xl font-semibold text-center text-gray-900 mb-8">Select Action</h2>
+
+            <!-- Action Selection -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <button onclick="selectAction('follow')" class="action-btn p-4 rounded-lg border-2 border-transparent hover:border-indigo-500 focus:outline-none focus:border-indigo-500" data-action="follow">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-user-plus text-xl text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium">Follow</span>
+                    </div>
+                </button>
+
+                <button onclick="selectAction('unfollow')" class="action-btn p-4 rounded-lg border-2 border-transparent hover:border-indigo-500 focus:outline-none focus:border-indigo-500" data-action="unfollow">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-user-minus text-xl text-white"></i>
+                        </div>
+                        <span class="text-sm font-medium">Unfollow</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Profile URL Input -->
+            <div class="mb-6">
+                <label for="profile-url" class="block text-sm font-medium text-gray-700 mb-2">Profile URL</label>
+                <div class="relative">
+                    <input type="text" id="profile-url" name="profile-url" class="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter {{ platform_name }} profile URL">
+                    <button class="absolute right-2 top-2 text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-paste"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Target Selection -->
+            <div class="mb-6">
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="radio" name="target" value="followers" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500" checked>
+                        <span class="ml-3 text-sm font-medium text-gray-700">Find their FOLLOWERS</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="target" value="following" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                        <span class="ml-3 text-sm font-medium text-gray-700">Find who they are FOLLOWING</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Quantity Selection -->
+            <div class="mb-8">
+                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                <select id="quantity" name="quantity" class="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="50">50 users</option>
+                    <option value="100">100 users</option>
+                    <option value="150">150 users</option>
+                    <option value="200">200 users</option>
+                    <option value="custom">Custom amount</option>
+                </select>
+            </div>
+
+            <!-- Action Button -->
+            <button type="button" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                LET'S GO!
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- URL Management Modal -->
+<div id="url-modal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white rounded-lg max-w-md w-full mx-4">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="text-lg font-medium">Manage URLs</h3>
+            <button onclick="toggleModal('url-modal')" class="text-gray-400 hover:text-gray-500">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="p-4">
+            <!-- URL Management Tools -->
+            <div class="flex space-x-4 mb-4">
+                <button class="flex items-center space-x-2 text-blue-600 hover:text-blue-700">
+                    <i class="fas fa-table"></i>
+                    <span>Connect Sheet</span>
+                </button>
+                <button class="flex items-center space-x-2 text-green-600 hover:text-green-700">
+                    <i class="fas fa-download"></i>
+                    <span>Export</span>
+                </button>
+                <button class="flex items-center space-x-2 text-yellow-600 hover:text-yellow-700">
+                    <i class="fas fa-upload"></i>
+                    <span>Import</span>
+                </button>
+            </div>
+
+            <!-- URL List -->
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-gray-500">1.</span>
+                    <input type="text" class="flex-1 px-3 py-2 border rounded-lg" placeholder="Add new URL...">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectAction(action) {
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.classList.remove('border-indigo-500');
+    });
+    document.querySelector(`[data-action="${action}"]`).classList.add('border-indigo-500');
+}
+
+function toggleModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+    } else {
+        modal.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold mb-4">Instagram Automation Test Page</h1>
+            
+            <!-- Connection Status -->
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold mb-4">System Status</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-medium text-gray-900">Database Connection</h3>
+                        <div id="db-status" class="mt-2">
+                            <span class="px-2 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">
+                                Checking...
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-medium text-gray-900">Redis Connection</h3>
+                        <div id="redis-status" class="mt-2">
+                            <span class="px-2 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">
+                                Checking...
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-medium text-gray-900">Selenium Status</h3>
+                        <div id="selenium-status" class="mt-2">
+                            <span class="px-2 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">
+                                Checking...
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-medium text-gray-900">Instagram Connection</h3>
+                        <div id="instagram-status" class="mt-2">
+                            <span class="px-2 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">
+                                Checking...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Actions -->
+            <div class="space-y-4">
+                <button onclick="runTests()" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Run Connection Tests
+                </button>
+                
+                <button onclick="testInstagramLogin()" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Test Instagram Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function updateStatus(elementId, status, message) {
+    const element = document.getElementById(elementId);
+    const className = status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+    element.innerHTML = `
+        <span class="px-2 py-1 text-sm rounded-full ${className}">
+            ${message}
+        </span>
+    `;
+}
+
+async function runTests() {
+    // Test database connection
+    try {
+        const dbResponse = await fetch('/api/test-database/');
+        const dbData = await dbResponse.json();
+        updateStatus('db-status', dbData.success, dbData.success ? 'Connected' : 'Failed');
+    } catch (e) {
+        updateStatus('db-status', false, 'Error');
+    }
+
+    // Test Redis connection
+    try {
+        const redisResponse = await fetch('/api/test-redis/');
+        const redisData = await redisResponse.json();
+        updateStatus('redis-status', redisData.success, redisData.success ? 'Connected' : 'Failed');
+    } catch (e) {
+        updateStatus('redis-status', false, 'Error');
+    }
+
+    // Test Selenium setup
+    try {
+        const seleniumResponse = await fetch('/api/test-selenium/');
+        const seleniumData = await seleniumResponse.json();
+        updateStatus('selenium-status', seleniumData.success, seleniumData.success ? 'Ready' : 'Failed');
+    } catch (e) {
+        updateStatus('selenium-status', false, 'Error');
+    }
+
+    // Test Instagram connection
+    try {
+        const instagramResponse = await fetch('/api/test-instagram/');
+        const instagramData = await instagramResponse.json();
+        updateStatus('instagram-status', instagramData.success, instagramData.success ? 'Connected' : 'Failed');
+    } catch (e) {
+        updateStatus('instagram-status', false, 'Error');
+    }
+}
+
+async function testInstagramLogin() {
+    try {
+        const response = await fetch('/api/test-instagram-login/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        });
+        const data = await response.json();
+        alert(data.success ? 'Login successful!' : 'Login failed: ' + data.error);
+    } catch (e) {
+        alert('Error testing Instagram login: ' + e.message);
+    }
+}
+
+// Run tests when page loads
+document.addEventListener('DOMContentLoaded', runTests);
+</script>
+{% endblock %} 

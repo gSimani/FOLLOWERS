@@ -1,0 +1,45 @@
+1. Project Overview
+
+Purpose: Briefly describe the project's main objective.
+Tech Stack: List the primary technologies used (e.g., Python, Django, React).
+2. Coding Standards
+
+Python:
+Follow PEP 8 guidelines.
+Use type hints where appropriate.
+Django:
+Organize apps logically; avoid monolithic structures.
+Use Django's ORM; minimize raw SQL usage.
+React:
+Use functional components and React hooks.
+Maintain a clear folder structure for components.
+3. AI Interaction Guidelines
+
+Provide concise prompts; avoid unnecessary context.
+Specify the desired output format (e.g., function, class).
+Indicate any constraints or requirements explicitly.
+4. Common Pitfalls to Avoid
+
+Avoid using deprecated libraries or methods.
+Ensure compatibility with the project's existing codebase.
+Prevent security vulnerabilities, such as SQL injection.
+5. Testing and Validation
+
+Write unit tests for new features.
+Use continuous integration tools to automate testing.
+Regularly review and refactor code to maintain quality.
+6. Deployment Considerations
+
+Ensure code is optimized for production environments.
+Use environment variables for configuration settings.
+Monitor application performance post-deployment.
+7. Documentation
+
+Comment code where necessary to explain complex logic.
+Maintain an updated README with setup instructions.
+Document any deviations from standard practices.
+8. Continuous Improvement
+
+Encourage team members to suggest improvements.
+Regularly update the .cursorrules file as the project evolves.
+Stay informed about updates in the technologies used.

@@ -2,20 +2,31 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.html",
+      "src": "hello-world-app/hello-world-webpage/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/",
+      "dest": "/hello-world-app/hello-world-webpage/index.html"
+    },
+    {
+      "src": "/styles/(.*)",
+      "dest": "/hello-world-app/hello-world-webpage/styles/$1"
+    },
+    {
+      "src": "/scripts/(.*)",
+      "dest": "/hello-world-app/hello-world-webpage/scripts/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/hello-world-app/hello-world-webpage/$1"
     }
   ],
   "github": {
     "enabled": true,
     "silent": true,
-    "autoAlias": true,
-    "autoJobCancelation": true
+    "autoAlias": true
   }
 }

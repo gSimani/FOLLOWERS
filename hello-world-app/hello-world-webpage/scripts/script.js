@@ -33,18 +33,48 @@ function clearMessages() {
     messages.innerHTML = '';
 }
 
-// Simulate server status check
+// Check server status
 function checkServerStatus() {
     const serverInfo = document.querySelector('.status-card:first-child .status-info p');
     serverInfo.textContent = 'Checking...';
     
-    // Simulate server check
+    // Get current hostname
+    const hostname = window.location.hostname;
+    const isProduction = hostname === 'www.yidbiz.com' || hostname === 'yidbiz.com';
+    const isVercel = hostname.includes('vercel.app');
+    
+    // Simulate server check with real status
     setTimeout(() => {
-        const isOnline = Math.random() > 0.1; // 90% chance of being online
-        serverInfo.textContent = isOnline ? 
-            'Running on localhost:8000' : 
-            'Connection issues detected';
+        const isOnline = true; // We know we're online if the page loaded
+        let statusText;
+        
+        if (isProduction) {
+            statusText = 'Running on YidBiz.com';
+        } else if (isVercel) {
+            statusText = 'Running on Vercel';
+        } else if (hostname === 'localhost') {
+            statusText = 'Running on localhost:8000';
+        } else {
+            statusText = `Running on ${hostname}`;
+        }
+        
+        serverInfo.textContent = isOnline ? statusText : 'Connection issues detected';
         serverInfo.style.color = isOnline ? '#666' : '#dc3545';
+        
+        // Update environment badge
+        const envBadge = document.querySelector('.environment-badge');
+        if (envBadge) {
+            if (isProduction) {
+                envBadge.textContent = 'Production Environment';
+                envBadge.style.backgroundColor = '#4CAF50';
+            } else if (isVercel) {
+                envBadge.textContent = 'Staging Environment';
+                envBadge.style.backgroundColor = '#FF9800';
+            } else {
+                envBadge.textContent = 'Development Environment';
+                envBadge.style.backgroundColor = '#2196F3';
+            }
+        }
     }, 1000);
 }
 

@@ -1,0 +1,21 @@
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Current Progress</h3>
+        <span class="text-sm text-gray-500" id="progress-percentage">0%</span>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+        <div 
+            id="progress-bar"
+            class="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500"
+            style="width: 0%"
+        ></div>
+    </div>
+    
+    <!-- Status Updates -->
+    <div class="mt-4">
+        <p id="current-action" class="text-sm text-gray-600">Initializing...</p>
+        <div id="action-log" class="mt-2 max-h-32 overflow-y-auto text-xs text-gray-500"></div>
+    </div>
+</div> 

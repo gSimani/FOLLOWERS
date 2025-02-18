@@ -1,12 +1,38 @@
 {
-  "version": 2,
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "outputDirectory": ".next",
-  "framework": "nextjs",
-  "github": {
-    "enabled": true,
-    "silent": true,
-    "autoAlias": true
-  }
-}
+    "version": 2,
+    "builds": [
+        {
+            "src": "vercel_app.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python3.11"
+            }
+        },
+        {
+            "src": "static/**",
+            "use": "@vercel/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "vercel_app.py"
+        }
+    ],
+    "env": {
+        "PYTHON_VERSION": "3.11",
+        "DJANGO_SETTINGS_MODULE": "social_automation.settings",
+        "DATABASE_URL": "postgres://postgres:228Sheboleth@db.rgvgfufakofsdpeokhok.supabase.co:5432/postgres",
+        "DEBUG": "False",
+        "ALLOWED_HOSTS": ".vercel.app,yidbiz.com,www.yidbiz.com",
+        "DISABLE_COLLECTSTATIC": "0",
+        "VERCEL": "true",
+        "DJANGO_LOG_LEVEL": "INFO",
+        "SECURE_SSL_REDIRECT": "true"
+    }
+} 

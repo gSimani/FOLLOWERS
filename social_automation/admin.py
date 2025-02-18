@@ -1,37 +1,23 @@
 from django.contrib import admin
-from .models import Platform, SocialProfile, Schedule, FollowTask, Analytics
-
-@admin.register(Platform)
-class PlatformAdmin(admin.ModelAdmin):
-    list_display = ('name', 'icon', 'created_at', 'updated_at')
-    search_fields = ('name',)
+from .models import SocialProfile, AutomationTask, TargetUser
 
 @admin.register(SocialProfile)
 class SocialProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'platform', 'username', 'created_at', 'updated_at')
-    list_filter = ('platform', 'created_at')
-    search_fields = ('user__username', 'username', 'platform__name')
-    raw_id_fields = ('user',)
+    list_display = ('username', 'platform', 'user', 'is_active', 'created_at')
+    list_filter = ('platform', 'is_active')
+    search_fields = ('username', 'user__username')
+    readonly_fields = ('created_at', 'updated_at')
 
-@admin.register(Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('user', 'platform', 'action', 'target_count', 'start_time', 'end_time', 'is_active')
-    list_filter = ('platform', 'action', 'is_active', 'created_at')
-    search_fields = ('user__username', 'platform__name')
-    raw_id_fields = ('user', 'social_profile')
+@admin.register(AutomationTask)
+class AutomationTaskAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'action', 'status', 'progress', 'created_at')
+    list_filter = ('action', 'status')
+    search_fields = ('profile__username', 'target_url')
+    readonly_fields = ('created_at', 'updated_at')
 
-@admin.register(FollowTask)
-class FollowTaskAdmin(admin.ModelAdmin):
-    list_display = ('user', 'platform', 'action', 'target_username', 'status', 'created_at')
-    list_filter = ('platform', 'action', 'status', 'created_at')
-    search_fields = ('user__username', 'target_username', 'platform__name')
-    raw_id_fields = ('user', 'social_profile')
-    readonly_fields = ('error_message',)
-
-@admin.register(Analytics)
-class AnalyticsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'platform', 'date', 'followers_count', 'following_count', 'engagement_rate')
-    list_filter = ('platform', 'date')
-    search_fields = ('user__username', 'platform__name')
-    raw_id_fields = ('user', 'social_profile')
-    date_hierarchy = 'date'
+@admin.register(TargetUser)
+class TargetUserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'task', 'action_taken', 'action_date')
+    list_filter = ('action_taken',)
+    search_fields = ('username', 'task__profile__username')
+    readonly_fields = ('action_date',) 

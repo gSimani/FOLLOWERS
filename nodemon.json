@@ -1,5 +1,0 @@
-{
-  "watch": ["hello-world-webpage/", "api/"],
-  "ext": "html,css,js",
-  "exec": "git add . && git commit -m 'Auto-update' && git push origin main"
-}

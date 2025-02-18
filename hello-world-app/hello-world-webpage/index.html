@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World - Development Dashboard</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="main-header">
+            <h1>Hello World</h1>
+            <div class="environment-badge">Development Environment</div>
+            <div id="timestamp" class="timestamp">Updated: Loading...</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Status Overview -->
+            <section class="status-section">
+                <h2>Environment Status</h2>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="status-icon">🌐</div>
+                        <div class="status-info">
+                            <h3>Server Status</h3>
+                            <p>Running on YidBiz.com</p>
+                        </div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-icon">⚡</div>
+                        <div class="status-info">
+                            <h3>Performance</h3>
+                            <p id="performance-status">Monitoring...</p>
+                        </div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-icon">📊</div>
+                        <div class="status-info">
+                            <h3>Page Health</h3>
+                            <p id="health-status">Checking...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Testing -->
+            <section class="test-section">
+                <h2>Interactive Testing</h2>
+                <div class="test-controls">
+                    <div class="input-group">
+                        <input type="text" id="messageInput" placeholder="Enter a test message..." class="modern-input">
+                        <button onclick="addTestMessage()" class="modern-button primary">Add Message</button>
+                    </div>
+                    <div id="messages" class="message-list">
+                        <!-- Dynamic messages will appear here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Health Monitor -->
+            <section class="monitoring-section">
+                <h2>Health Monitor</h2>
+                <div class="tool-card">
+                    <div class="tool-controls">
+                        <button onclick="window.pageMonitor.checkPageHealth()" class="modern-button">Check Health</button>
+                        <button onclick="showHealthReport()" class="modern-button">View Report</button>
+                        <button onclick="window.pageMonitor.clearLogs()" class="modern-button secondary">Clear Logs</button>
+                    </div>
+                    <div id="debug-output" class="tool-output">
+                        <p>Monitoring active... Check console for detailed logs.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>YidBiz.com - Real-time Monitoring Active</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/scripts/error-monitor.js"></script>
+    <script src="/scripts/script.js"></script>
+    <script src="/scripts/dynamic-updater.js"></script>
+    <script src="/scripts/page-monitor.js"></script>
+    
+    <script>
+        // Update performance status periodically
+        function updatePerformanceStatus() {
+            const performanceStatus = document.getElementById('performance-status');
+            const now = performance.now();
+            performanceStatus.textContent = `Page Load: ${Math.round(now)}ms`;
+        }
+        setInterval(updatePerformanceStatus, 5000);
+
+        // Show health report with improved formatting
+        function showHealthReport() {
+            const report = window.pageMonitor.getHealthReport();
+            const output = document.getElementById('debug-output');
+            const healthStatus = document.getElementById('health-status');
+            
+            // Update health status badge
+            const hasErrors = report.errors.length > 0;
+            const hasWarnings = report.warnings.length > 0;
+            healthStatus.textContent = hasErrors ? 'Issues Detected' : 
+                                     hasWarnings ? 'Warnings Present' : 'Healthy';
+            healthStatus.className = hasErrors ? 'status-badge error' : 
+                                   hasWarnings ? 'status-badge warning' : 'status-badge success';
+
+            output.innerHTML = `
+                <div class="health-report">
+                    <div class="metric-grid">
+                        <div class="metric">
+                            <span class="metric-label">Total Logs</span>
+                            <span class="metric-value">${report.totalLogs}</span>
+                        </div>
+                        <div class="metric ${report.errors.length > 0 ? 'error' : ''}">
+                            <span class="metric-label">Errors</span>
+                            <span class="metric-value">${report.errors.length}</span>
+                        </div>
+                        <div class="metric ${report.warnings.length > 0 ? 'warning' : ''}">
+                            <span class="metric-label">Warnings</span>
+                            <span class="metric-value">${report.warnings.length}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Uptime</span>
+                            <span class="metric-value">${Math.floor(report.uptime / 1000)}s</span>
+                        </div>
+                    </div>
+                    <div class="system-info">
+                        <p>Last Check: ${report.lastCheck ? new Date(report.lastCheck).toLocaleString() : 'Never'}</p>
+                        <p>Storage: ${report.localStorage.size}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showHealthReport();
+            setInterval(showHealthReport, 5000);
+        });
+    </script>
+</body>
+</html> 

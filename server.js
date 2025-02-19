@@ -1,50 +1,21 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
+const app = express();
 
-const server = http.createServer((req, res) => {
-    // Enable CORS for all requests
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// Serve static files
+app.use(express.static('.'));
 
-    // Handle OPTIONS request for CORS preflight
-    if (req.method === 'OPTIONS') {
-        res.writeHead(200);
-        res.end();
-        return;
-    }
-
-    // Handle POST requests for speed test
-    if (req.method === 'POST') {
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(JSON.stringify({ status: 'success' }));
-        });
-        return;
-    }
-
-    // Serve index.html for GET requests
-    const filePath = path.join(__dirname, 'index.html');
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            res.writeHead(500);
-            res.end('Error loading index.html');
-            return;
-        }
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(data);
-    });
+// Handle POST requests for speed test
+app.post('/', express.json(), (req, res) => {
+    res.json({ status: 'success' });
 });
 
-// Listen on all interfaces for production, or localhost for development
-const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
-const PORT = process.env.PORT || 3000;
+// Serve index.html for all other routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-server.listen(PORT, HOST, () => {
-    console.log(`Server running at http://${HOST}:${PORT}/`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 }); 
